@@ -61,6 +61,48 @@ def parse_file(agenda, filename):
         agenda.events[j + offset_dates].add_player(player)
 
 
+class Game:
+
+  def __init__(self, name, nplayer):
+    self.name = name
+    self.nplayer_min = nplayer
+
+  def __str__(self):
+    return "{}: {}+p".format(self.name, self.nplayer_min)
+
+
+  def __repr__(self):
+    return "{}: {}+p".format(self.name, self.nplayer_min)
+
+
+
+class Player:
+
+  def __init__(self, name, games):
+    self.name = name
+    self.games = games  
+
+
+  def __repr__(self):
+    return "{}: {}".format(self.name, self.games)
+
+
 agenda = Agenda()
 parse_file(agenda, '/home/xavier/Bureau/Doodle.xls')
+
+config = configparser.ConfigParser()
+config.read('config')
+
+games = []
+for game_name in list(config['games'].keys()):
+  games.append(Game(game_name, config['games'].get(game_name)))
+
+players = []
+# TODO add name reconciliation
+for player_name in list(config['players'].keys()):
+  players.append(Player(player_name, config['players'].get(player_name)))
+
+print(list(map(str, games)))
+print(agenda)
+print(list(map(str, players)))
 
