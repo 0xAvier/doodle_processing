@@ -43,7 +43,7 @@ def parse_dates(agenda, row, sh):
     agenda.add_event(Event(value + " " + current_month))
 
 
-def parse_file(agenda, filename):
+def parse_sheet(agenda, filename):
   workbook = xlrd.open_workbook(filename)
   sh = workbook.sheet_by_index(0)
   row_dates = 4
@@ -88,7 +88,7 @@ class Player:
 
 
 agenda = Agenda()
-parse_file(agenda, '/home/xavier/Bureau/Doodle.xls')
+parse_sheet(agenda, '/home/xavier/Bureau/Doodle.xls')
 
 config = configparser.ConfigParser()
 config.read('config')
