@@ -121,7 +121,8 @@ class Event:
 
 
   def str_full_games(self):
-    list(map(self.full_games()))
+    disp = lambda e: "{} {}p ({})".format(e[0].name, len(e[1]), ', '.join(e[1]))
+    return ';'.join(list(map(disp, self.full_games())))
 
 
   def add_game_for_player(self, player):
@@ -138,7 +139,7 @@ class Event:
 
 
   def __str__(self):
-    return "{};{}".format(self.date, ';'.join(map(str, self.full_games())))
+    return "{};{}".format(self.date, self.str_full_games())
 
 
 class Agenda:
