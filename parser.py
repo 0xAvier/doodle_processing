@@ -7,15 +7,32 @@ class Game:
 
   def __init__(self, name, ranges):
     self.name = name
-    self.nplayer_min = nplayer_min
-    self.nplayer_max = nplayer_max
+    self.nplayers = []
+    self._parse_nplayer_range(ranges)
 
+  def _parse_nplayer_range(self, string):
+      ranges = string.split(',') 
+      for r in ranges:
+        subr = r.split('-')
+        if len(subr) == 1:
+          self.nplayers.append(int(subr[0]))
+        elif len(subr) == 2:
+          self.nplayers += range(int(subr[0]), int(subr[1]) + 1)
+        else:
+          raise Exception("A range should be either 'a' or 'a-b', chained by ','. {} is incorrect".format(string))
+
+
+  def nplayer_max(self):
+    return self.nplayers[-1]
+
+
+  # TODO check str vs repr
   def __str__(self):
-    return "{}: {}+p".format(self.name, self.nplayer_min)
+    return "{}: ({}p)".format(self.name, "/".join(self.nplayers))
 
 
   def __repr__(self):
-    return "{}: ({}+p)".format(self.name, self.nplayer_min)
+    return "{}: ({}p)".format(self.name, "/".join(self.nplayers))
 
 
 class GameCollection:
@@ -78,6 +95,7 @@ class Group:
     return "\n".join(map(str, self.players))
 
 
+
 def parse_config(filename):
   games = []
   players = []
@@ -87,11 +105,8 @@ def parse_config(filename):
   config.read(filename)
 
   for game_name in list(config['games'].keys()):
-    # TODO: put min player / max player
-    nplayers = config['games'].get(game_name).split('-')
-    nmin = int(nplayers[0])
-    nmax = int(nplayers[1]) if len(nplayers) == 2 else float('inf')
-    games.append(Game(game_name, nmin, nmax))
+    range_string = config['games'].get(game_name)
+    games.append(Game(game_name, range_string))
 
   collection = GameCollection(games)
   
@@ -122,14 +137,14 @@ class Event:
 
 
   def full_games(self):
-    return [[g, self.games_dict[g]] for g in self.games_dict.keys() if len(self.games_dict[g]) >= g.nplayer_min]
+    return [[g, self.games_dict[g]] for g in self.games_dict.keys() if len(self.games_dict[g]) in g.nplayers]
 
 
   def _format_full_game(full_game):
     g = full_game[0]
     players = full_game[1]
     pnames = ', '.join(players)
-    if g.nplayer_max < float('inf') and g.nplayer_min > len(players):
+    if g.nplayer_max() < len(players):
       nplayers = "{}/{}p".format(g.nplayer_max, len(players))
     else:
       nplayers = "{}p".format(len(players))
