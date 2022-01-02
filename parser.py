@@ -178,9 +178,8 @@ class Agenda:
       value = sh.cell(row-1, j).value
     current_month = sh.cell(row-1, 1).value
     for j in range(1, sh.ncols):
-      # todo change syntax
-      if sh.cell(row-1, j).value != "":
-        current_month = sh.cell(row-1, j).value
+      if (v := sh.cell(row-1, j).value) != "":
+        current_month = v
       value = sh.cell(row, j).value
       self.add_event(Event(value + " " + current_month))
 
