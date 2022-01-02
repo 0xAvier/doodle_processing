@@ -5,7 +5,7 @@ import argparse
 
 class Game:
 
-  def __init__(self, name, nplayer_min, nplayer_max):
+  def __init__(self, name, ranges):
     self.name = name
     self.nplayer_min = nplayer_min
     self.nplayer_max = nplayer_max
@@ -101,7 +101,7 @@ def parse_config(filename):
     players.append(Player(player_name, pgames))
 
 
-  nhosts = int(config['options']['host']) if 'host' in config['options'].keys() else 0;
+  nhosts = int(config['options']['nhosts']) if 'nhosts' in config['options'].keys() else 0;
   hosts = []
   for nhost in range(nhosts):
     hosts.append(Player("host_{}".format(nhost+1), games))
