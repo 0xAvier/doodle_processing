@@ -1,5 +1,6 @@
 import xlrd
 import configparser
+import argparse
 
 
 class Game:
@@ -228,7 +229,13 @@ def find_matches(agenda, collection, group):
     e.add_hosts(group.hosts)
 
 
-group, collection = parse_config('config')
-agenda = Agenda('/home/xavier/Bureau/Doodle.xls')
+
+parser = argparse.ArgumentParser(description='Find matching')
+parser.add_argument('-s', '--sheet', required=True)
+parser.add_argument('--config', default='config')
+args = parser.parse_args()
+
+group, collection = parse_config(args.config)
+agenda = Agenda(args.sheet)
 find_matches(agenda, collection, group)
 print(agenda)
