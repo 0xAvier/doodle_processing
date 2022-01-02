@@ -6,3 +6,6 @@ Agricola=2
 [players]
 Xavier=Agricola, 7WDuel
 Dang²=Agricola, 7WD
+
+[options]
+host=1
