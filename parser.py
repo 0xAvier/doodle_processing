@@ -121,7 +121,7 @@ class Event:
 
 
   def str_full_games(self):
-    list(map( self.full_games()))
+    list(map(self.full_games()))
 
 
   def add_game_for_player(self, player):
