@@ -5,9 +5,10 @@ import argparse
 
 class Game:
 
-  def __init__(self, name, nplayer):
+  def __init__(self, name, nplayer_min, nplayer_max):
     self.name = name
-    self.nplayer_min = nplayer
+    self.nplayer_min = nplayer_min
+    self.nplayer_max = nplayer_max
 
   def __str__(self):
     return "{}: {}+p".format(self.name, self.nplayer_min)
@@ -87,7 +88,10 @@ def parse_config(filename):
 
   for game_name in list(config['games'].keys()):
     # TODO: put min player / max player
-    games.append(Game(game_name, int(config['games'].get(game_name))))
+    nplayers = config['games'].get(game_name).split('-')
+    nmin = int(nplayers[0])
+    nmax = int(nplayers[1]) if len(nplayers) == 2 else float('inf')
+    games.append(Game(game_name, nmin, nmax))
 
   collection = GameCollection(games)
   
@@ -121,9 +125,19 @@ class Event:
     return [[g, self.games_dict[g]] for g in self.games_dict.keys() if len(self.games_dict[g]) >= g.nplayer_min]
 
 
+  def _format_full_game(full_game):
+    g = full_game[0]
+    players = full_game[1]
+    pnames = ', '.join(players)
+    if g.nplayer_max < float('inf') and g.nplayer_min > len(players):
+      nplayers = "{}/{}p".format(g.nplayer_max, len(players))
+    else:
+      nplayers = "{}p".format(len(players))
+    disp = lambda e: "{} {} ({})".format(g.name, nplayers, pnames) 
+    return disp(full_game)
+
   def str_full_games(self):
-    disp = lambda e: "{} {}p ({})".format(e[0].name, len(e[1]), ', '.join(e[1]))
-    return ';'.join(list(map(disp, self.full_games())))
+    return ';'.join(list(map(Event._format_full_game, self.full_games())))
 
 
   def add_game_for_player(self, player):
