@@ -5,7 +5,7 @@ import configparser
 class Game:
 
   def __init__(self, name, nplayer):
-    self.name = name.lower()
+    self.name = name
     self.nplayer_min = nplayer
 
   def __str__(self):
@@ -24,7 +24,7 @@ class GameCollection:
 
   def find(self, name):
     try:
-      game = next(filter(lambda g: g.name == name, self.games))
+      game = next(filter(lambda g: g.name.lower() == name.lower(), self.games))
       return game
     except:
       names = ', '.join(self.names())
@@ -43,7 +43,7 @@ class GameCollection:
 class Player:
 
   def __init__(self, name, games):
-    self.name = name.lower()
+    self.name = name
     self.games = games  
 
 
@@ -60,7 +60,7 @@ class Group:
 
   def find(self, name):
     try:
-      player = next(filter(lambda p: p.name == name, self.players))
+      player = next(filter(lambda p: p.name.lower() == name.lower(), self.players))
       return player
     except:
       names = ', '.join(self.names())
@@ -81,18 +81,18 @@ def parse_config(filename):
   players = []
 
   config = configparser.ConfigParser()
+  config.optionxform = str
   config.read(filename)
 
   for game_name in list(config['games'].keys()):
     # TODO: put min player / max player
-    games.append(Game(game_name.lower(), int(config['games'].get(game_name))))
+    games.append(Game(game_name, int(config['games'].get(game_name))))
 
   collection = GameCollection(games)
   
-  # TODO add name reconciliation
   for player_name in list(config['players'].keys()):
     game_names = config['players'].get(player_name).split(', ')
-    pgames = list(map(lambda gn: collection.find(gn.lower()), game_names))
+    pgames = list(map(lambda gn: collection.find(gn), game_names))
     players.append(Player(player_name, pgames))
 
 
@@ -166,7 +166,7 @@ class Agenda:
     self._parse_dates(row_dates, sh)
     offset_dates = -1
     for i in range(start_row_player, end_row_player):
-      player = sh.cell(i, 0).value.lower()
+      player = sh.cell(i, 0).value
       for j in range(1, sh.ncols):
         value = sh.cell(i, j).value
         if value == "OK":
@@ -195,6 +195,6 @@ def find_matches(agenda, collection, group):
 
 group, collection = parse_config('config')
 agenda = Agenda('/home/xavier/Bureau/Doodle.xls')
-
 find_matches(agenda, collection, group)
+# TODO: translate date
 print(agenda)
