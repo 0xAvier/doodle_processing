@@ -22,17 +22,28 @@ class Game:
           raise Exception("A range should be either 'a' or 'a-b', chained by ','. {} is incorrect".format(string))
 
 
+  def nplayer_min(self):
+    return self.nplayers[0]
+
+
   def nplayer_max(self):
     return self.nplayers[-1]
 
 
-  # TODO check str vs repr
+  def nplayer_smallest_max(self, val):
+    res = self.nplayers[0]
+    for i in range(1, len(self.nplayers)):
+      if self.nplayers[i] > val: 
+        break
+    return res 
+
+
   def __str__(self):
     return "{}: ({}p)".format(self.name, "/".join(self.nplayers))
 
 
   def __repr__(self):
-    return "{}: ({}p)".format(self.name, "/".join(self.nplayers))
+    return "{}: ({}p)".format(self.name, "/".join(map(str, self.nplayers)))
 
 
 class GameCollection:
@@ -137,19 +148,26 @@ class Event:
 
 
   def full_games(self):
-    return [[g, self.games_dict[g]] for g in self.games_dict.keys() if len(self.games_dict[g]) in g.nplayers]
+    return [[g, self.games_dict[g]] for g in self.games_dict.keys() if len(self.games_dict[g]) in g.nplayers or len(self.games_dict[g]) > g.nplayer_min()]
 
 
   def _format_full_game(full_game):
     g = full_game[0]
     players = full_game[1]
     pnames = ', '.join(players)
-    if g.nplayer_max() < len(players):
-      nplayers = "{}/{}p".format(g.nplayer_max, len(players))
+    nplayer = len(players)
+    if nplayer in g.nplayers:
+      nplayers = "{}p".format(nplayer)
+    elif g.nplayer_max() < nplayer:
+      nplayers = "{}/{}p".format(g.nplayer_max(), nplayer)
+    elif nplayer not in g.nplayers:
+      nplayers = "{}/{}p".format(g.nplayer_smallest_max(nplayer), nplayer)
     else:
-      nplayers = "{}p".format(len(players))
+      raise Exception("Full game error")
+        
     disp = lambda e: "{} {} ({})".format(g.name, nplayers, pnames) 
     return disp(full_game)
+
 
   def str_full_games(self):
     return ';'.join(list(map(Event._format_full_game, self.full_games())))
