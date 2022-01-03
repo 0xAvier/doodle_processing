@@ -1,7 +1,7 @@
 class Group:
 
   def __init__(self, players, hosts):
-    self.players = players 
+    self.players = players
     self.hosts = hosts
 
 

@@ -7,7 +7,7 @@ class Game:
     self._parse_nplayer_range(ranges)
 
   def _parse_nplayer_range(self, string):
-      ranges = string.split(',') 
+      ranges = string.split(',')
       for r in ranges:
         subr = r.split('-')
         if len(subr) == 1:
@@ -29,9 +29,9 @@ class Game:
   def nplayer_smallest_max(self, val):
     res = self.nplayers[0]
     for i in range(1, len(self.nplayers)):
-      if self.nplayers[i] > val: 
+      if self.nplayers[i] > val:
         break
-    return res 
+    return res
 
 
   def __str__(self):

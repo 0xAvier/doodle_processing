@@ -1,7 +1,7 @@
 import argparse
 
-from src.Configuration import Configuration 
-from src.Agenda import Agenda 
+from src.Configuration import Configuration
+from src.Agenda import Agenda
 
 
 def parse_args():

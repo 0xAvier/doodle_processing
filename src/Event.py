@@ -1,7 +1,7 @@
 class Event:
 
   def __init__(self, date):
-    self.date = date 
+    self.date = date
     self.players = []
     # TODO here replace games_dict with new class object 'matching'
     self.games_dict = {}
@@ -27,8 +27,8 @@ class Event:
       nplayers = "{}/{}p".format(g.nplayer_smallest_max(nplayer), nplayer)
     else:
       raise Exception("Full game error")
-        
-    disp = lambda e: "{} {} ({})".format(g.name, nplayers, pnames) 
+
+    disp = lambda e: "{} {} ({})".format(g.name, nplayers, pnames)
     return disp(full_game)
 
 
@@ -44,7 +44,7 @@ class Event:
 
 
   def add_hosts(self, hosts):
-    for g in self.games_dict.keys(): 
+    for g in self.games_dict.keys():
       for h in hosts:
         self.games_dict[g].append(h.name)
 
