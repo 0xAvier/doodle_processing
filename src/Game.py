@@ -34,6 +34,16 @@ class Game:
     return res
 
 
+  def nplayer_str(self, nplayer):
+    if nplayer in self.nplayers:
+      return "{}p".format(nplayer)
+    elif self.nplayer_max() < nplayer:
+      return "{}/{}p".format(self.nplayer_max(), nplayer)
+    elif nplayer not in g.nplayers:
+      return "{}/{}p".format(self.nplayer_smallest_max(nplayer), nplayer)
+    else:
+      raise Exception("Full game error")
+
   def __str__(self):
     return "{}: ({}p)".format(self.name, "/".join(self.nplayers))
 

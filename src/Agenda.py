@@ -104,17 +104,7 @@ class Agenda:
         matching = list(filter(lambda m: m[0].name.lower() == g.name.lower(),
           event.full_games()))
         if len(matching) == 1:
-          # TODO refactor this
-          nplayers = ""
-          nplayer = len(matching[0][1])
-          if nplayer in g.nplayers:
-            nplayers = "{}p".format(nplayer)
-          elif g.nplayer_max() < nplayer:
-            nplayers = "{}/{}p".format(g.nplayer_max(), nplayer)
-          elif nplayer not in g.nplayers:
-            nplayers = "{}/{}p".format(g.nplayer_smallest_max(nplayer), nplayer)
-          else:
-            raise Exception("Full game error")
+          nplayers = g.nplayer_str(len(matching[0][1]))
           players = ', '.join(matching[0][1])
           print("{}: {};".format(nplayers, players), end='')
         else:
