@@ -79,3 +79,47 @@ class Agenda:
       self.add_event(Event(value + " " + current_month))
 
 
+  def find_matches(self, configuration):
+    for e in self.events:
+      for p in e.players:
+        player = configuration.group.find(p)
+        e.add_game_for_player(player)
+      e.add_hosts(configuration.group.hosts)
+
+
+  def _display_csv_header(collection):
+    print(";", end='')
+    for g in collection.games:     
+      print("{} {}p;".format(g.name, g.nplayers_str), end='')
+    print("")
+  
+  
+  def display_csv(self, configuration):
+    Agenda._display_csv_header(configuration.collection)
+    # TODO order games by nplayers
+    for event in self.events:
+      print("{};".format(event.date), end='')
+      for g in configuration.collection.games: 
+        # TODO with refactor matching
+        matching = list(filter(lambda m: m[0].name.lower() == g.name.lower(), 
+          event.full_games()))
+        if len(matching) == 1:
+          # TODO refactor this
+          nplayers = ""
+          nplayer = len(matching[0][1])
+          if nplayer in g.nplayers:
+            nplayers = "{}p".format(nplayer)
+          elif g.nplayer_max() < nplayer:
+            nplayers = "{}/{}p".format(g.nplayer_max(), nplayer)
+          elif nplayer not in g.nplayers:
+            nplayers = "{}/{}p".format(g.nplayer_smallest_max(nplayer), nplayer)
+          else:
+            raise Exception("Full game error")
+          players = ', '.join(matching[0][1])
+          print("{}: {};".format(nplayers, players), end='')
+        else: 
+          print(";", end='')
+      print("")
+
+
+
