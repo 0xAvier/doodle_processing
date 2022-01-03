@@ -3,6 +3,7 @@ class Event:
   def __init__(self, date):
     self.date = date 
     self.players = []
+    # TODO here replace games_dict with new class object 'matching'
     self.games_dict = {}
 
   def add_player(self, player):

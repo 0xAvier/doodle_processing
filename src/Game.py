@@ -2,6 +2,7 @@ class Game:
 
   def __init__(self, name, ranges):
     self.name = name
+    self.nplayers_str = ranges
     self.nplayers = []
     self._parse_nplayer_range(ranges)
 
