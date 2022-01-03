@@ -8,6 +8,13 @@ from src.Group import Group
 from src.Agenda import Agenda 
 
 
+def parse_args():
+  parser = argparse.ArgumentParser(description='Find matching')
+  parser.add_argument('-s', '--sheet', required=True)
+  parser.add_argument('--config', default='config')
+  return parser.parse_args()
+
+
 def parse_config(filename):
   games = []
   players = []
@@ -79,19 +86,12 @@ def display_agenda(agenda, collection, group):
         print(";", end='')
     print("")
 
-    
 
-
-
-
-parser = argparse.ArgumentParser(description='Find matching')
-parser.add_argument('-s', '--sheet', required=True)
-parser.add_argument('--config', default='config')
-args = parser.parse_args()
 
 # TODO move parse config out of main
 # TODO refactor the matching part
 # TODO do the stats per player per game
+args = parse_args()
 group, collection = parse_config(args.config)
 agenda = Agenda(args.sheet)
 find_matches(agenda, collection, group)
