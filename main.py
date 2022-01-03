@@ -51,6 +51,10 @@ parser.add_argument('-s', '--sheet', required=True)
 parser.add_argument('--config', default='config')
 args = parser.parse_args()
 
+# TODO move parse config out of main
+# TODO refactor the matching part
+# TODO do the per game column
+# TODO do the stats per player per game
 group, collection = parse_config(args.config)
 agenda = Agenda(args.sheet)
 find_matches(agenda, collection, group)
