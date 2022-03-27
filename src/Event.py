@@ -4,7 +4,7 @@ class Event:
     self.date = date
     self.players = []
     # TODO here replace games_dict with new class object 'matching'
-    self.matchings = None 
+    self.games_dict = {}
 
   def add_player(self, player):
     self.players.append(player)
@@ -37,7 +37,10 @@ class Event:
 
 
   def add_game_for_player(self, player):
-    self.matchings.add_player(player)
+    for g in player.games:
+      if g not in self.games_dict:
+        self.games_dict[g] = []
+      self.games_dict[g].append(player.name)
 
 
   def add_hosts(self, hosts):
