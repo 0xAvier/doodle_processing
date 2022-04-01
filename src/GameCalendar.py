@@ -8,6 +8,8 @@ class GameCalendar:
   def __init__(self, sheetname, configuration):
     keys = map(lambda p: p.name, configuration.group.players + configuration.group.hosts)
     self.players = dict.fromkeys(keys)
+    keys = map(lambda g: g.name, configuration.collection.games)
+    self.dates_per_game = dict.fromkeys(keys)
     self._parse_sheet(sheetname)
 
 
@@ -46,6 +48,31 @@ class GameCalendar:
               self.players[p_key] = []
             self.players[p_key].append([date, games[j-1]])
 
+
+  def display_stats(self, configuration):
+    values = []
+    for p in self.players.keys():
+      events = self.players[p]
+      if events is None:
+        events = []
+      values.append([p, len(events)])
+    sorted_values = sorted(values, key=lambda e: e[1], reverse=True)
+    for p in sorted_values:
+      print(f"{p[0]} will play {p[1]} times")
+
+    print("-----")
+    values = []
+    for g in self.dates_per_game.keys():
+      events = self.dates_per_game[g]
+      if events is None:
+        events = []
+      values.append([g, len(events)])
+    sorted_values = sorted(values, key=lambda e: e[1], reverse=True)
+    for g in sorted_values:
+      print(f"{g[0]} will be played {g[1]} times")
+
+
+
   def write_calendars(self, configuration):
     for p in self.players.keys():
       c = Calendar()
@@ -53,9 +80,14 @@ class GameCalendar:
       if gamenights is None:
         continue
       for gamenight in gamenights: 
+        g_name = gamenight[1].split(' ')[0]
         e = Event()
         e.begin = gamenight[0]
-        e.name = gamenight[1]
+        e.name = g_name 
         c.events.add(e)
+        if self.dates_per_game[g_name] is None:
+          self.dates_per_game[g_name] = set() 
+        self.dates_per_game[g_name].add(gamenight[0])
       with open(f"{p}.ics", 'w') as my_file:
         my_file.writelines(c)
+    self.display_stats(configuration)
