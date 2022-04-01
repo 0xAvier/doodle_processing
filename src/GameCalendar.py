@@ -72,6 +72,12 @@ class GameCalendar:
       print(f"{g[0]} will be played {g[1]} times")
 
 
+  def _parse_date(self, date):
+    print(date)
+    s_date = date.split('/')
+    res = f"{s_date[2]}-{s_date[1]}-{s_date[0]} 12:00:00"
+    print(res)
+    return res
 
   def write_calendars(self, configuration):
     for p in self.players.keys():
@@ -81,13 +87,15 @@ class GameCalendar:
         continue
       for gamenight in gamenights: 
         g_name = gamenight[1].split(' ')[0]
+        g_date = self._parse_date(gamenight[0])
         e = Event()
-        e.begin = gamenight[0]
+        e.begin = g_date 
         e.name = g_name 
+        e.make_all_day()
         c.events.add(e)
         if self.dates_per_game[g_name] is None:
           self.dates_per_game[g_name] = set() 
-        self.dates_per_game[g_name].add(gamenight[0])
+        self.dates_per_game[g_name].add(g_date)
       with open(f"{p}.ics", 'w') as my_file:
         my_file.writelines(c)
     self.display_stats(configuration)
