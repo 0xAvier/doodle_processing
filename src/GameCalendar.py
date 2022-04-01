@@ -74,12 +74,17 @@ class GameCalendar:
       print(f"{g[0]} will be played {g[1]} times")
 
 
+  def _format_date(self, date, time):
+    s_date = date.split('/')
+    res = f"{s_date[2]}-{s_date[1]}-{s_date[0]} {time}" 
+    tz = 'Europe/Paris'
+    return arrow.get(res, tzinfo=tz)
+
   def _parse_date(self, date, early_start):
     s_date = date.split('/')
     start_time = '19:00:00' if early_start else '19:30:00' 
-    res = f"{s_date[2]}-{s_date[1]}-{s_date[0]} {start_time}" 
-    tz = 'Europe/Paris'
-    return arrow.get(res, tzinfo=tz)
+    end_time = '23:00:00' 
+    return self._format_date(date, start_time), self._format_date(date, end_time)
 
   def write_calendars(self, configuration):
     for p in self.players.keys():
@@ -90,17 +95,15 @@ class GameCalendar:
       for gamenight in gamenights: 
         g_name = gamenight[1].split(' ')[0]
         early_start = configuration.collection.find(g_name).early_start
-        g_date = self._parse_date(gamenight[0], early_start)
-        e = ics.Event()
-        e.begin = g_date
-        e.name = g_name 
+        start, end = self._parse_date(gamenight[0], early_start)
+        e = ics.Event(name = g_name, begin = start, end=end)
         e.alarms = [
             ics.alarm.EmailAlarm(trigger=timedelta(days=-1)),
             ics.alarm.EmailAlarm(trigger=timedelta(minutes=-30))]
         c.events.add(e)
         if self.dates_per_game[g_name] is None:
           self.dates_per_game[g_name] = set() 
-        self.dates_per_game[g_name].add(g_date)
+        self.dates_per_game[g_name].add(start)
       with open(f"{p}.ics", 'w') as my_file:
         my_file.writelines(c)
     self.display_stats(configuration)
