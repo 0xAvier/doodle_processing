@@ -6,6 +6,11 @@ class Game:
     self.nplayers = []
     self._parse_nplayer_range(ranges)
 
+
+  def early_start(self):
+    return self.name == "Fief" or self.name == "TimeOfCrisis"
+
+
   def _parse_nplayer_range(self, string):
       ranges = string.split(',')
       for r in ranges:
@@ -50,5 +55,7 @@ class Game:
 
   def __repr__(self):
     return "{}: ({}p)".format(self.name, "/".join(map(str, self.nplayers)))
+
+
 
 
