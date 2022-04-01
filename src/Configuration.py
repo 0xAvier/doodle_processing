@@ -19,8 +19,13 @@ class Configuration:
     config.read(filename)
 
     for game_name in list(config['games'].keys()):
-      range_string = config['games'].get(game_name)
-      games.append(Game(game_name, range_string))
+      game_config = config['games'].get(game_name)
+      s_config = game_config.split('; ')
+      range_string = s_config[0] 
+      g = Game(game_name, range_string)
+      for i in range(1, len(s_config)):
+        g.add_option(s_config[i])
+      games.append(g)
 
     self.collection = GameCollection(games)
 

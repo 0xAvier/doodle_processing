@@ -5,10 +5,14 @@ class Game:
     self.nplayers_str = ranges
     self.nplayers = []
     self._parse_nplayer_range(ranges)
+    self.early_start = False 
 
 
-  def early_start(self):
-    return self.name == "Fief" or self.name == "TimeOfCrisis"
+  def add_option(self, option):
+    if option == "early":
+      self.early_start = True
+    else:
+      raise Exception(f"Option {option} for game unknown")
 
 
   def _parse_nplayer_range(self, string):

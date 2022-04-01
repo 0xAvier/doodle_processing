@@ -89,7 +89,7 @@ class GameCalendar:
         continue
       for gamenight in gamenights: 
         g_name = gamenight[1].split(' ')[0]
-        early_start = configuration.collection.find(g_name).early_start()
+        early_start = configuration.collection.find(g_name).early_start
         g_date = self._parse_date(gamenight[0], early_start)
         e = ics.Event()
         e.begin = g_date
