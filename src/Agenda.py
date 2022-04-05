@@ -25,7 +25,7 @@ class Agenda:
       n_col = len(list(sh[0]))
       row_dates = 0
       start_row_player = row_dates + 2
-      end_row_player = n_row - 1
+      end_row_player = n_row 
       self._parse_dates(row_dates, sh)
       for i in range(start_row_player, end_row_player):
         player = sh[i][0]
