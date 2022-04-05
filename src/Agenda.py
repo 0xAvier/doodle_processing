@@ -24,6 +24,7 @@ class Agenda:
       n_row = len(list(sh))
       n_col = len(list(sh[0]))
       row_dates = 0
+      column_offset_events = 1
       start_row_player = row_dates + 2
       end_row_player = n_row 
       self._parse_dates(row_dates, sh)
@@ -32,7 +33,7 @@ class Agenda:
         for j in range(1, n_col):
           value = sh[i][j]
           if value == "Oui":
-            self.events[j].add_player(player)
+            self.events[j-column_offset_events].add_player(player)
 
 
   def _parse_dates(self, row, sh):
