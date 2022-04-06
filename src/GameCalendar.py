@@ -1,4 +1,5 @@
-import csv
+import csv 
+import re
 import arrow
 import ics 
 from datetime import timedelta, timezone
@@ -44,11 +45,14 @@ class GameCalendar:
             continue
           value = value[1]
           players = value.split(',')
+          game = games[j-1]
           for p in players:
             p_key = p[1:]
             if self.players[p_key] is None:
               self.players[p_key] = []
-            self.players[p_key].append([date, games[j-1]])
+            self.players[p_key].append([date, game])
+          g_name = self._get_game_name_core(games[j-1], spaced=True)
+          print(f"{date}: {g_name} avec{value}")
 
 
   def display_stats(self, configuration):
@@ -86,6 +90,15 @@ class GameCalendar:
     end_time = '23:00:00' 
     return self._format_date(date, start_time), self._format_date(date, end_time)
 
+
+  # TODO
+  # Move function to appropriate location (in Game.py?)
+  def _get_game_name_core(self, name, spaced=False):
+    res = name.split(' ')[0]
+    if spaced:
+      res = ' '.join(re.findall('[A-Z][^A-Z]*', res))
+    return res 
+
   def write_calendars(self, configuration):
     for p in self.players.keys():
       c = ics.Calendar()
@@ -93,9 +106,10 @@ class GameCalendar:
       if gamenights is None:
         continue
       for gamenight in gamenights: 
-        g_name = gamenight[1].split(' ')[0]
+        g_date = gamenight[0]
+        g_name = self._get_game_name_core(gamenight[1])
         early_start = configuration.collection.find(g_name).early_start
-        start, end = self._parse_date(gamenight[0], early_start)
+        start, end = self._parse_date(g_date, early_start)
         e = ics.Event(name = g_name, begin = start, end=end)
         e.alarms = [
             ics.alarm.EmailAlarm(trigger=timedelta(days=-1)),
