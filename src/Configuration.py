@@ -8,6 +8,7 @@ from src.Group import Group
 class Configuration:
 
   def __init__(self, config_fn):
+    self.group = None
     self._parse_config(config_fn)
 
   def _parse_config(self, filename):
@@ -36,10 +37,11 @@ class Configuration:
 
 
     nhosts = int(config['options']['nhosts']) if 'nhosts' in config['options'].keys() else 0;
+    mandatory_name = config['options']['mandatory_player'] if 'mandatory_player' in config['options'].keys() else None;
     hosts = []
     for nhost in range(nhosts):
       hosts.append(Player("host_{}".format(nhost+1), games))
 
-    self.group = Group(players, hosts)
+    self.group = Group(players, hosts, mandatory_player_name=mandatory_name)
 
 

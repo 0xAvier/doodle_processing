@@ -10,6 +10,10 @@ class Event:
     self.players.append(player)
 
 
+  def has_player(self, player_name):
+    return player_name in self.players
+
+
   def full_games(self):
     return [[g, self.games_dict[g]] for g in self.games_dict.keys() if len(self.games_dict[g]) in g.nplayers or len(self.games_dict[g]) > g.nplayer_min()]
 

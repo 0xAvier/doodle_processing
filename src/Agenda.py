@@ -57,15 +57,24 @@ class Agenda:
     print("")
 
 
+  def _display_blank_line(configuration):
+    print(';'.join(['' for _ in range(len(configuration.collection.games) + 1)]))
+
+
   def display_csv(self, configuration):
     Agenda._display_csv_header(configuration.collection)
     # TODO order games by nplayers
     for event in self.events:
       print("{};".format(event.date), end='')
+      if configuration.group.mandatory_player_name is not None and \
+        not event.has_player(configuration.group.mandatory_player_name):
+        Agenda._display_blank_line(configuration)
+        continue
+      full_games = event.full_games()
       for g in configuration.collection.games:
         # TODO with refactor matching
         matching = list(filter(lambda m: m[0].name.lower() == g.name.lower(),
-          event.full_games()))
+          full_games))
         if len(matching) == 1:
           nplayers = g.nplayer_str(len(matching[0][1]))
           players = ', '.join(matching[0][1])

@@ -1,8 +1,9 @@
 class Group:
 
-  def __init__(self, players, hosts):
+  def __init__(self, players, hosts, mandatory_player_name=None):
     self.players = players
     self.hosts = hosts
+    self.mandatory_player_name = mandatory_player_name
 
 
   def find(self, name):
@@ -13,6 +14,12 @@ class Group:
       names = ', '.join(self.names())
       print("Player {} not found in player list {}".format(name, names))
       raise
+
+
+  def contains_mandatory_player(self, players):
+    print( list(map(lambda p: p.name, players)))
+    print( mandatory_player_name in map(lambda p: p.name, players))
+    return mandatory_player_name in map(lambda p: p.name, players)
 
 
   def names(self):
