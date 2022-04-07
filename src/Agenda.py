@@ -1,4 +1,5 @@
 import csv
+from datetime import datetime
 from src.Event import Event
 import subprocess
 
@@ -39,7 +40,8 @@ class Agenda:
   def _parse_dates(self, row, sh):
     for j in range(1, len(sh[0])):
       value = sh[row][j]
-      self.add_event(Event(value))
+      if len(value) > 0:
+        self.add_event(Event(value))
 
 
   def find_matches(self, configuration):
@@ -50,9 +52,9 @@ class Agenda:
       e.add_hosts(configuration.group.hosts)
 
 
-  def _display_csv_header(collection):
+  def _display_csv_header(games):
     print(";", end='')
-    for g in collection.games:
+    for g in games:
       print("{} {}p;".format(g.name, g.nplayers_str), end='')
     print("")
 
@@ -61,17 +63,33 @@ class Agenda:
     print(';'.join(['' for _ in range(len(configuration.collection.games) + 1)]))
 
 
+  def sort_games(games, events, mandatory_player_name):
+    total = []
+    for event in events:
+      if mandatory_player_name is not None and \
+          not event.has_player(mandatory_player_name):
+        continue
+      total+= map(lambda g: g[0].name, event.full_games())
+    res = sorted(games, key=lambda g: total.count(g.name), reverse=True)
+    res = filter(lambda g: total.count(g.name) > 0, res)
+    return list(res)
+
+
   def display_csv(self, configuration):
-    Agenda._display_csv_header(configuration.collection)
+    mandatory_player_name = configuration.group.mandatory_player_name
+    sorted_games = Agenda.sort_games(configuration.collection.games, self.events, mandatory_player_name)
+    Agenda._display_csv_header(sorted_games)
     # TODO order games by nplayers
     for event in self.events:
+      if datetime(event.year(), event.month(), event.day()).weekday() == 0:
+        print("")
       print("{};".format(event.date), end='')
-      if configuration.group.mandatory_player_name is not None and \
-        not event.has_player(configuration.group.mandatory_player_name):
+      if mandatory_player_name is not None and \
+        not event.has_player(mandatory_player_name):
         Agenda._display_blank_line(configuration)
         continue
       full_games = event.full_games()
-      for g in configuration.collection.games:
+      for g in sorted_games: 
         # TODO with refactor matching
         matching = list(filter(lambda m: m[0].name.lower() == g.name.lower(),
           full_games))

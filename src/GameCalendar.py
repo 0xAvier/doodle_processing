@@ -38,6 +38,8 @@ class GameCalendar:
 
       row_dates = 1
       for i in range(row_dates, n_row):
+        if len(sh[i]) == 0:
+            continue
         date = sh[i][0] 
         for j in range(1, n_col):
           value = sh[i][j].split(':')

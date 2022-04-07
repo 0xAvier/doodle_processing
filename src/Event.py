@@ -36,6 +36,24 @@ class Event:
     return disp(full_game)
 
 
+  def year(self):
+    if (len(self.date) < 8):
+      return None 
+    return int(self.date[6:10])
+
+
+  def month(self):
+    if (len(self.date) < 8):
+      return None 
+    return int(self.date[3:5])
+
+
+  def day(self):
+    if (len(self.date) < 8):
+      return None 
+    return int(self.date[0:2])
+
+
   def str_full_games(self):
     return ';'.join(list(map(Event._format_full_game, self.full_games())))
 
