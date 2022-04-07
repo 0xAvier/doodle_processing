@@ -6,11 +6,14 @@ class Game:
     self.nplayers = []
     self._parse_nplayer_range(ranges)
     self.early_start = False 
+    self.owner_name = None
 
 
   def add_option(self, option):
     if option == "early":
       self.early_start = True
+    elif option.startswith("owner="):
+      self.owner_name = option[len("owner="):]
     else:
       raise Exception(f"Option {option} for game unknown")
 

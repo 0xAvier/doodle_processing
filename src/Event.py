@@ -15,7 +15,9 @@ class Event:
 
 
   def full_games(self):
-    return [[g, self.games_dict[g]] for g in self.games_dict.keys() if len(self.games_dict[g]) in g.nplayers or len(self.games_dict[g]) > g.nplayer_min()]
+    owner_there = lambda g: g.owner_name is None or self.has_player(g.owner_name)
+    enough_player = lambda g: len(self.games_dict[g]) in g.nplayers or len(self.games_dict[g]) > g.nplayer_min()
+    return [[g, self.games_dict[g]] for g in self.games_dict.keys() if enough_player(g) and owner_there(g)]
 
 
   def _format_full_game(full_game):
