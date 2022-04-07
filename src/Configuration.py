@@ -21,7 +21,7 @@ class Configuration:
 
     for game_name in list(config['games'].keys()):
       game_config = config['games'].get(game_name)
-      s_config = game_config.split('; ')
+      s_config = list(map(lambda s: s.strip(' '), game_config.split(';')))
       range_string = s_config[0] 
       g = Game(game_name, range_string)
       for i in range(1, len(s_config)):
@@ -31,7 +31,7 @@ class Configuration:
     self.collection = GameCollection(games)
 
     for player_name in list(config['players'].keys()):
-      game_names = config['players'].get(player_name).split(', ')
+      game_names = list(map(lambda s: s.strip(' '), config['players'].get(player_name).split(',')))
       pgames = list(map(lambda gn: self.collection.find(gn), game_names))
       players.append(Player(player_name, pgames))
 
