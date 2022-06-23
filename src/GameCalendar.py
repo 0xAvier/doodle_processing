@@ -51,7 +51,11 @@ class GameCalendar:
                         p_key = p[1:]
                         if self.players[p_key] is None:
                             self.players[p_key] = []
-                        self.players[p_key].append([date, game])
+                        self.players[p_key].append({
+                            "date": date,
+                            "game": game,
+                            "players": ", ".join(players)
+                        })
                     g_name = self._get_game_name_core(
                         games[j - 1], spaced=True)
                     print(f"{date}: {g_name} avec{value}")
@@ -108,11 +112,15 @@ class GameCalendar:
             if gamenights is None:
                 continue
             for gamenight in gamenights:
-                g_date = gamenight[0]
-                g_name = self._get_game_name_core(gamenight[1])
+                g_date = gamenight["date"]
+                g_name = self._get_game_name_core(gamenight["game"])
                 early_start = configuration.collection.find(g_name).early_start
                 start, end = self._parse_date(g_date, early_start)
-                e = ics.Event(name=g_name, begin=start, end=end)
+                e = ics.Event(
+                    name=g_name,
+                    description=gamenight["players"],
+                    begin=start,
+                    end=end)
                 e.alarms = [
                     ics.alarm.EmailAlarm(trigger=timedelta(days=-1)),
                     ics.alarm.EmailAlarm(trigger=timedelta(minutes=-30))]
