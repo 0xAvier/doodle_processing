@@ -17,7 +17,7 @@ Ensuite,
 ### In [options] block
 `nhosts` : le nombre de joueurs automatiquement ajouté à la table
 
-`mandatory_player` : 
+`mandatory_player` : joueur qui doit être présent à la table pour que le jeu se lance
 
 ### On Games
 Fief=5-6; early; owner=Xavier  
