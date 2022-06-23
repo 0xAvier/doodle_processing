@@ -10,6 +10,7 @@ def display_results(games, players, o_file):
   with open(o_file, 'w') as my_file:
     print_games(games, my_file)
     print_players(players, my_file)
+    my_file.write("\n[options]\n")
 
 
 def print_games(games, my_file):
@@ -18,7 +19,6 @@ def print_games(games, my_file):
     if g != "":
       my_file.write(f"{g}=2-8\n")
 
-  my_file.write("\n")
 
 
 def print_players(players, my_file):
