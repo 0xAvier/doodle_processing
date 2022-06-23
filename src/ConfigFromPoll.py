@@ -16,7 +16,7 @@ def print_games(games, my_file):
   my_file.write("[games]\n")
   for g in games:
     if g != "":
-      my_file.write(f"{g}=1-8\n")
+      my_file.write(f"{g}=2-8\n")
 
   my_file.write("\n")
 
