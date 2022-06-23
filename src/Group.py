@@ -1,32 +1,29 @@
 class Group:
 
-  def __init__(self, players, hosts, mandatory_player_name=None):
-    self.players = players
-    self.hosts = hosts
-    self.mandatory_player_name = mandatory_player_name
+    def __init__(self, players, hosts, mandatory_player_name=None):
+        self.players = players
+        self.hosts = hosts
+        self.mandatory_player_name = mandatory_player_name
 
+    def find(self, name):
+        try:
+            player = next(
+                filter(
+                    lambda p: p.name.lower() == name.lower(),
+                    self.players))
+            return player
+        except BaseException:
+            names = ', '.join(self.names())
+            print("Player {} not found in player list {}".format(name, names))
+            raise
 
-  def find(self, name):
-    try:
-      player = next(filter(lambda p: p.name.lower() == name.lower(), self.players))
-      return player
-    except:
-      names = ', '.join(self.names())
-      print("Player {} not found in player list {}".format(name, names))
-      raise
+    def contains_mandatory_player(self, players):
+        print(list(map(lambda p: p.name, players)))
+        print(mandatory_player_name in map(lambda p: p.name, players))
+        return mandatory_player_name in map(lambda p: p.name, players)
 
+    def names(self):
+        return [p.name for p in self.players]
 
-  def contains_mandatory_player(self, players):
-    print( list(map(lambda p: p.name, players)))
-    print( mandatory_player_name in map(lambda p: p.name, players))
-    return mandatory_player_name in map(lambda p: p.name, players)
-
-
-  def names(self):
-    return [p.name for p in self.players]
-
-
-  def __str__(self):
-    return "\n".join(map(str, self.players))
-
-
+    def __str__(self):
+        return "\n".join(map(str, self.players))
