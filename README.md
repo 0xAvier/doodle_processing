@@ -20,6 +20,6 @@ Ensuite,
 `mandatory_player` : 
 
 ### On Games
-Fief=5-6; early; owner=Xavier
-`early` : doit démarrer à 19h à la place de 19h30
+Fief=5-6; early; owner=Xavier  
+`early` : doit démarrer à 19h à la place de 19h30  
 `owner` : propriétaire du jeu, doit être présent
