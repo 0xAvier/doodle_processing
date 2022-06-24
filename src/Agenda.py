@@ -95,8 +95,8 @@ class Agenda:
                     filter(
                         lambda m: m[0].name.lower() == g.name.lower(),
                         full_games))
-                if len(
-                        matching) == 1 and mandatory_player_name in matching[0][1]:
+                if len(matching) == 1 and (
+                        not mandatory_player_name or mandatory_player_name in matching[0][1]):
                     nplayers = g.nplayer_str(len(matching[0][1]))
                     players = ', '.join(matching[0][1])
                     print("{}: {};".format(nplayers, players), end='')
