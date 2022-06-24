@@ -12,6 +12,16 @@ class Configuration:
         self.group = None
         self._parse_config(config_fn)
 
+    def _remove_impossible_games(self):
+        m_player = self.group.mandatory_player()
+        if not m_player:
+            return
+        mandatory_player_games = m_player.games
+        initial_games = list(self.collection.games)
+        for game in initial_games:
+            if game not in mandatory_player_games:
+                self.collection.remove_game(game.name)
+
     def _parse_config(self, filename):
         games = []
         players = []
@@ -50,3 +60,4 @@ class Configuration:
             players,
             hosts,
             mandatory_player_name=mandatory_name)
+        self._remove_impossible_games()

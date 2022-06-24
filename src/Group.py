@@ -22,6 +22,11 @@ class Group:
         print(mandatory_player_name in map(lambda p: p.name, players))
         return mandatory_player_name in map(lambda p: p.name, players)
 
+    def mandatory_player(self):
+        if self.mandatory_player_name:
+            return self.find(self.mandatory_player_name)
+        return None
+
     def names(self):
         return [p.name for p in self.players]
 

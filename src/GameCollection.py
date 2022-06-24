@@ -18,5 +18,8 @@ class GameCollection:
     def names(self):
         return [g.name for g in self.games]
 
+    def remove_game(self, game_name):
+        self.games.remove(self.find(game_name))
+
     def __str__(self):
         return "\n".join(map(str, self.games))
