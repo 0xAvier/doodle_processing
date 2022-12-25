@@ -19,8 +19,8 @@ class Group:
 
     def contains_mandatory_player(self, players):
         print(list(map(lambda p: p.name, players)))
-        print(mandatory_player_name in map(lambda p: p.name, players))
-        return mandatory_player_name in map(lambda p: p.name, players)
+        print(self.mandatory_player_name in map(lambda p: p.name, players))
+        return self.mandatory_player_name in map(lambda p: p.name, players)
 
     def mandatory_player(self):
         if self.mandatory_player_name:
