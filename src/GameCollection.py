@@ -1,3 +1,6 @@
+import sys
+
+
 class GameCollection:
 
     def __init__(self, games):
@@ -12,7 +15,8 @@ class GameCollection:
             return game
         except BaseException:
             names = ', '.join(self.names())
-            print("Game '{}' not found in game list {}".format(name, names))
+            sys.stderr.write(
+                "Game '{}' not found in game list {}\n".format(name, names))
             raise
 
     def names(self):
