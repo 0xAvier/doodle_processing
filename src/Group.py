@@ -1,3 +1,6 @@
+import sys
+
+
 class Group:
 
     def __init__(self, players, hosts, mandatory_player_name=None):
@@ -14,13 +17,14 @@ class Group:
             return player
         except BaseException:
             names = ', '.join(self.names())
-            print("Player {} not found in player list {}".format(name, names))
+            sys.stderr.write(
+                "Player {} not found in player list {}\n".format(name, names))
             raise
 
     def contains_mandatory_player(self, players):
         print(list(map(lambda p: p.name, players)))
-        print(mandatory_player_name in map(lambda p: p.name, players))
-        return mandatory_player_name in map(lambda p: p.name, players)
+        print(self.mandatory_player_name in map(lambda p: p.name, players))
+        return self.mandatory_player_name in map(lambda p: p.name, players)
 
     def mandatory_player(self):
         if self.mandatory_player_name:
