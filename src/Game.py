@@ -46,7 +46,7 @@ class Game:
             return "{}p".format(nplayer)
         elif self.nplayer_max() < nplayer:
             return "{}/{}p".format(self.nplayer_max(), nplayer)
-        elif nplayer not in g.nplayers:
+        elif nplayer not in self.nplayers:
             return "{}/{}p".format(self.nplayer_smallest_max(nplayer), nplayer)
         else:
             raise Exception("Full game error")
