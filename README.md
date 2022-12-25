@@ -1,16 +1,16 @@
 ## Génération de fichier config
 
 Génerer un fichier de config 'output' à partir du sondage de jeux :
-`./main.py --generate_config_from_poll <date_poll_result>`
+`./main.py --generate_config_from_poll jeux.csv`
 
 
 ## Génération du fichier des possibilités
 Ensuite, 
-`./main.py -c output -s <date_poll_file> > o.csv`
+`./main.py -c output -s dates.csv > all.csv`
 
 
 ## Génération des ics & stats 
-./main.py -c output -s <processed_file> -i
+./main.py -c output -s selection.csv -i
 
 
 ## Options

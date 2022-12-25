@@ -25,16 +25,17 @@ def parse_args():
 # TODO refactor the matching part
 # TODO do the stats per player per game
 args = parse_args()
-configuration = Configuration(args.config)
 
 # TODO rename agenda in Availabilities
 # TODO move configuration to agenda
 if args.generate_config_from_poll:
     generateConfigFromPoll(args.generate_config_from_poll)
 elif args.create_ics:
+    configuration = Configuration(args.config)
     calendar = GameCalendar(args.sheet, configuration)
     calendar.write_calendars(configuration)
 else:
+    configuration = Configuration(args.config)
     agenda = Agenda(args.sheet)
     agenda.find_matches(configuration)
     agenda.display_csv(configuration)
