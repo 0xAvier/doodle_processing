@@ -11,6 +11,7 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Find matching')
     parser.add_argument('-s', '--sheet')
     parser.add_argument('-c', '--config', default='config')
+    parser.add_argument('-o', '--output', default='ouput')
     parser.add_argument(
         '-i',
         '--create_ics',
@@ -29,7 +30,7 @@ args = parse_args()
 # TODO rename agenda in Availabilities
 # TODO move configuration to agenda
 if args.generate_config_from_poll:
-    generateConfigFromPoll(args.generate_config_from_poll)
+    generateConfigFromPoll(args.generate_config_from_poll, args.output)
 elif args.create_ics:
     configuration = Configuration(args.config)
     calendar = GameCalendar(args.sheet, configuration)

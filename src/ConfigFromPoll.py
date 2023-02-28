@@ -26,7 +26,7 @@ def print_players(players, my_file):
         my_file.write(f"{key}={','.join(value)}\n")
 
 
-def generateConfigFromPoll(filename, o_file="output"):
+def generateConfigFromPoll(filename, o_file):
     subprocess.call(["sed", "-i", "-e", 's/"//g', filename])
     players = {}
     with open(filename, newline='') as csvfile:
