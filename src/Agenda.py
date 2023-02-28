@@ -48,15 +48,30 @@ class Agenda:
                 e.add_game_for_player(player)
             e.add_hosts(configuration.group.hosts)
 
-    def _display_csv_header(games):
+    def _display_csv_header(self, games, mandatory_player_name):
         print(";", end='')
+        matches_per_game = Agenda.matches_per_game(games, self.events, mandatory_player_name)
         for g in games:
-            print("{} {}p;".format(g.name, g.nplayers_str), end='')
+            print("{} {} matches;".format(g.name, matches_per_game[g.name]), end='')
         print("")
 
     def _display_blank_line(configuration):
         print(
             ';'.join(['' for _ in range(len(configuration.collection.games) + 1)]))
+
+    def matches_per_game(games, events, mandatory_player_name):
+        res = {}
+        for event in events:
+            if mandatory_player_name is not None and \
+                    not event.has_player(mandatory_player_name):
+                continue
+            for g in event.full_games():
+                n = g[0].name
+                if n not in res:
+                    res[n] = 0
+                res[g[0].name] += 1
+
+        return res
 
     def sort_games(games, events, mandatory_player_name):
         total = []
@@ -65,7 +80,7 @@ class Agenda:
                     not event.has_player(mandatory_player_name):
                 continue
             total += map(lambda g: g[0].name, event.full_games())
-        res = sorted(games, key=lambda g: total.count(g.name), reverse=True)
+        res = sorted(games, key=lambda g: total.count(g.name))
         res = filter(lambda g: total.count(g.name) > 0, res)
         return list(res)
 
@@ -75,7 +90,7 @@ class Agenda:
             configuration.collection.games,
             self.events,
             mandatory_player_name)
-        Agenda._display_csv_header(sorted_games)
+        self._display_csv_header(sorted_games, mandatory_player_name)
         # TODO order games by nplayers
         for event in self.events:
             if datetime(
