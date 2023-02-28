@@ -3,7 +3,7 @@ import subprocess
 
 
 def read_games(game_line):
-    return list(map(lambda s: s.replace(" ", ""), game_line))
+    return list(map(lambda s: s.replace(" ", "_"), game_line))
 
 
 def display_results(games, players, o_file):

@@ -52,7 +52,7 @@ class Agenda:
         print(";", end='')
         matches_per_game = Agenda.matches_per_game(games, self.events, mandatory_player_name)
         for g in games:
-            print("{} {} matches;".format(g.name, matches_per_game[g.name]), end='')
+            print("{} {} matches;".format(g.name.replace("_", " "), matches_per_game[g.name]), end='')
         print("")
 
     def _display_blank_line(configuration):
