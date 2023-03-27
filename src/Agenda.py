@@ -22,6 +22,12 @@ class Agenda:
             sh = list(csv.reader(csvfile, delimiter=',', quotechar='"'))
             n_row = len(list(sh))
             n_col = len(list(sh[0]))
+            if n_row < 2:
+                raise Exception(
+                    "Not enough row found, check the csv file delimiter")
+            if n_col < 2:
+                raise Exception(
+                    "Not enough column found, check the csv file delimiter")
             row_dates = 0
             column_offset_events = 1
             start_row_player = row_dates + 2
@@ -50,9 +56,11 @@ class Agenda:
 
     def _display_csv_header(self, games, mandatory_player_name):
         print(";", end='')
-        matches_per_game = Agenda.matches_per_game(games, self.events, mandatory_player_name)
+        matches_per_game = Agenda.matches_per_game(
+            games, self.events, mandatory_player_name)
         for g in games:
-            print("{} {} matches;".format(g.name.replace("_", " "), matches_per_game[g.name]), end='')
+            print("{} {} matches;".format(g.name.replace(
+                "_", " "), matches_per_game[g.name]), end='')
         print("")
 
     def _display_blank_line(configuration):
