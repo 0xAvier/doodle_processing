@@ -35,6 +35,12 @@ class GameCalendar:
             sh = list(csv.reader(csvfile, delimiter=';', quotechar='"'))
             n_row = len(list(sh))
             n_col = len(list(sh[0]))
+            if n_row < 2:
+                raise Exception(
+                    "Not enough row found, check the csv file delimiter")
+            if n_col < 2:
+                raise Exception(
+                    "Not enough column found, check the csv file delimiter")
 
             games = self._parse_game_line(sh)
 
