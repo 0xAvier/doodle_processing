@@ -27,6 +27,9 @@ class GameCalendar:
 
         return games
 
+    def _parse_sheet_bis(self, filename):
+        return
+
     def _parse_sheet(self, filename):
         with open(filename, newline='') as csvfile:
             sh = list(csv.reader(csvfile, delimiter=';', quotechar='"'))
@@ -40,6 +43,7 @@ class GameCalendar:
                 if len(sh[i]) == 0:
                     continue
                 date = sh[i][0]
+                has_event = False
                 for j in range(1, n_col):
                     value = sh[i][j].split(':')
                     if len(value) < 2:
@@ -58,6 +62,9 @@ class GameCalendar:
                         })
                     g_name = self._get_game_name_core(
                         games[j - 1], spaced=True)
+                    if has_event:
+                        raise Exception("Two games booked for the", date)
+                    has_event = True
                     print(f"{date}: {g_name} avec{value}")
 
     def display_stats(self, configuration):
