@@ -33,6 +33,12 @@ def generateConfigFromPoll(filename, o_file):
         sh = list(csv.reader(csvfile, delimiter=',', quotechar='"'))
         n_row = len(list(sh))
         n_col = len(list(sh[0]))
+        if n_row < 2:
+            raise Exception(
+                "Not enough row found, check the csv file delimiter")
+        if n_col < 2:
+            raise Exception(
+                "Not enough column found, check the csv file delimiter")
         games = read_games(sh[0][1:])
         for i in range(1, n_row):
             player_name = sh[i][0]
