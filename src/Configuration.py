@@ -26,7 +26,7 @@ class Configuration:
         games = []
         players = []
 
-        config = configparser.ConfigParser()
+        config = configparser.ConfigParser(delimiters='=')
         config.optionxform = str
         config.read(filename)
 
