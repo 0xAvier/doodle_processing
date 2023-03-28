@@ -19,15 +19,16 @@ class Agenda:
     def _parse_sheet(self, filename):
         subprocess.call(["sed", "-i", "-e", 's/"//g', filename])
         with open(filename, newline='') as csvfile:
+            nb_yes = 0
             sh = list(csv.reader(csvfile, delimiter=',', quotechar='"'))
             n_row = len(list(sh))
             n_col = len(list(sh[0]))
             if n_row < 2:
                 raise Exception(
-                    "Not enough row found, check the csv file delimiter")
+                    f"Not enough row found ({n_row}) check the csv file delimiter")
             if n_col < 2:
                 raise Exception(
-                    "Not enough column found, check the csv file delimiter")
+                    f"Not enough column found ({n_col}), check the csv file delimiter")
             row_dates = 0
             column_offset_events = 1
             start_row_player = row_dates + 2
@@ -38,8 +39,12 @@ class Agenda:
                 for j in range(1, n_col):
                     value = sh[i][j]
                     if value == "Oui":
+                        nb_yes += 1
                         self.events[j -
                                     column_offset_events].add_player(player)
+            if nb_yes == 0:
+                raise Exception(
+                    "No 'Oui' found, have you given the right sheet?")
 
     def _parse_dates(self, row, sh):
         for j in range(1, len(sh[0])):
@@ -99,7 +104,6 @@ class Agenda:
             self.events,
             mandatory_player_name)
         self._display_csv_header(sorted_games, mandatory_player_name)
-        # TODO order games by nplayers
         for event in self.events:
             if datetime(
                     event.year(),

@@ -90,7 +90,12 @@ class GameCalendar:
             events = self.dates_per_game[g]
             if events is None:
                 events = []
-            values.append([g, len(events)])
+            # TODO
+            # Ugly, should fix the name once for all accross all executable
+            # Configuration should use " " in order to handle spaces
+            # And class name should have the correct name directly
+            name = g.replace("_", " ")
+            values.append([name, len(events)])
         sorted_values = sorted(values, key=lambda e: e[1], reverse=True)
         for g in sorted_values:
             print(f"{g[0]} will be played {g[1]} times")
@@ -113,7 +118,13 @@ class GameCalendar:
     # Move function to appropriate location (in Game.py?)
 
     def _get_game_name_core(self, name, spaced=False):
-        res = name.split(' ')[0]
+        res = '_'.join(name.split(' ')[:-2])
+        if spaced:
+            res = ' '.join(re.findall('[A-Z][^A-Z]*', res))
+        return res
+
+    def _get_game_display_name(self, name, spaced=False):
+        res = ' '.join(name.split(' ')[:-2])
         if spaced:
             res = ' '.join(re.findall('[A-Z][^A-Z]*', res))
         return res
@@ -128,9 +139,10 @@ class GameCalendar:
                 g_date = gamenight["date"]
                 g_name = self._get_game_name_core(gamenight["game"])
                 early_start = configuration.collection.find(g_name).early_start
+                g_display_name = self._get_game_display_name(gamenight["game"])
                 start, end = self._parse_date(g_date, early_start)
                 e = ics.Event(
-                    name=g_name,
+                    name=g_display_name,
                     description=gamenight["players"],
                     begin=start,
                     end=end)
