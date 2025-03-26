@@ -61,13 +61,14 @@ class GameCalendar:
                         p_key = p[1:]
                         if self.players[p_key] is None:
                             self.players[p_key] = []
-                        self.players[p_key].append({
-                            "date": date,
-                            "game": game,
-                            "players": ", ".join(players)
-                        })
-                    g_name = self._get_game_name_core(
-                        games[j - 1], spaced=True)
+                        self.players[p_key].append(
+                            {"date": date, "game": game, "players": ", ".join(players)}
+                        )
+                    g_name = (
+                        self._get_game_name_core(games[j - 1], spaced=True)
+                        .replace("_", " ")
+                        .replace("  ", " ")
+                    )
                     if has_event:
                         raise Exception("Two games booked for the", date)
                     has_event = True
