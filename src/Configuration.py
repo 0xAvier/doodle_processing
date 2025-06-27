@@ -43,10 +43,16 @@ class Configuration:
         self.collection = GameCollection(games)
 
         for player_name in list(config['players'].keys()):
+            #  default games
             game_names = list(map(lambda s: s.strip(' '),
                                   config['players'].get(player_name).split(',')))
             pgames = list(map(lambda gn: self.collection.find(gn), game_names))
-            players.append(Player(player_name, pgames))
+            #  under reserve games
+            ur_game_names = list(map(lambda s: s.strip(
+                ' '), config['players_under_reserve'].get(player_name).split(',')))
+            ur_pgames = list(
+                map(lambda gn: self.collection.find(gn), ur_game_names))
+            players.append(Player(player_name, pgames, ur_pgames))
 
         nhosts = int(config['options']['nhosts']
                      ) if 'nhosts' in config['options'].keys() else 0

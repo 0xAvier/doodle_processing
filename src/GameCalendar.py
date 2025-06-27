@@ -31,8 +31,8 @@ class GameCalendar:
         return
 
     def _parse_sheet(self, filename):
-        with open(filename, newline='') as csvfile:
-            sh = list(csv.reader(csvfile, delimiter=';', quotechar='"'))
+        with open(filename, newline="") as csvfile:
+            sh = list(csv.reader(csvfile, delimiter=";", quotechar='"'))
             n_row = len(list(sh))
             n_col = len(list(sh[0]))
             if n_row < 2:
@@ -51,11 +51,11 @@ class GameCalendar:
                 date = sh[i][0]
                 has_event = False
                 for j in range(1, n_col):
-                    value = sh[i][j].split(':')
+                    value = sh[i][j].split(":")
                     if len(value) < 2:
                         continue
                     value = value[1]
-                    players = value.split(',')
+                    players = value.split(",")
                     game = games[j - 1]
                     for p in players:
                         p_key = p[1:]
@@ -102,15 +102,15 @@ class GameCalendar:
             print(f"{g[0]} will be played {g[1]} times")
 
     def _format_date(self, date, time):
-        s_date = date.split('/')
+        s_date = date.split("/")
         res = f"{s_date[2]}-{s_date[1]}-{s_date[0]} {time}"
-        tz = 'Europe/Paris'
+        tz = "Europe/Paris"
         return arrow.get(res, tzinfo=tz)
 
     def _parse_date(self, date, early_start):
-        s_date = date.split('/')
-        start_time = '19:00:00' if early_start else '19:30:00'
-        end_time = '23:00:00'
+        s_date = date.split("/")
+        start_time = "19:00:00" if early_start else "19:30:00"
+        end_time = "23:00:00"
         return self._format_date(
             date, start_time), self._format_date(
             date, end_time)
@@ -119,15 +119,15 @@ class GameCalendar:
     # Move function to appropriate location (in Game.py?)
 
     def _get_game_name_core(self, name, spaced=False):
-        res = '_'.join(name.split(' ')[:-2])
+        res = "_".join(name.split(" ")[:-2])
         if spaced:
-            res = ' '.join(re.findall('[A-Z][^A-Z]*', res))
+            res = " ".join(re.findall("[A-Z][^A-Z]*", res))
         return res
 
     def _get_game_display_name(self, name, spaced=False):
-        res = ' '.join(name.split(' ')[:-2])
+        res = " ".join(name.split(" ")[:-2])
         if spaced:
-            res = ' '.join(re.findall('[A-Z][^A-Z]*', res))
+            res = " ".join(re.findall("[A-Z][^A-Z]*", res))
         return res
 
     def write_calendars(self, configuration):
@@ -146,14 +146,16 @@ class GameCalendar:
                     name=g_display_name,
                     description=gamenight["players"],
                     begin=start,
-                    end=end)
+                    end=end,
+                )
                 e.alarms = [
                     ics.alarm.EmailAlarm(trigger=timedelta(days=-1)),
-                    ics.alarm.EmailAlarm(trigger=timedelta(minutes=-30))]
+                    ics.alarm.EmailAlarm(trigger=timedelta(minutes=-30)),
+                ]
                 c.events.add(e)
                 if self.dates_per_game[g_name] is None:
                     self.dates_per_game[g_name] = set()
                 self.dates_per_game[g_name].add(start)
-            with open(f"{p}.ics", 'w') as my_file:
+            with open(f"{p}.ics", "w") as my_file:
                 my_file.writelines(c)
         self.display_stats(configuration)

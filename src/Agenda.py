@@ -18,9 +18,9 @@ class Agenda:
 
     def _parse_sheet(self, filename):
         subprocess.call(["sed", "-i", "-e", 's/"//g', filename])
-        with open(filename, newline='') as csvfile:
+        with open(filename, newline="") as csvfile:
             nb_yes = 0
-            sh = list(csv.reader(csvfile, delimiter=',', quotechar='"'))
+            sh = list(csv.reader(csvfile, delimiter=",", quotechar='"'))
             n_row = len(list(sh))
             n_col = len(list(sh[0]))
             if n_row < 2:
@@ -42,6 +42,10 @@ class Agenda:
                         nb_yes += 1
                         self.events[j -
                                     column_offset_events].add_player(player)
+                    if value == "Si nécessaire":
+                        nb_yes += 1
+                        self.events[j -
+                                    column_offset_events].add_player_under_reserve(player)
             if nb_yes == 0:
                 raise Exception(
                     "No 'Oui' found, have you given the right sheet?")
@@ -57,26 +61,35 @@ class Agenda:
             for p in e.players:
                 player = configuration.group.find(p)
                 e.add_game_for_player(player)
+            for p in e.players_under_reserve:
+                player = configuration.group.find(p)
+                e.add_game_for_player_under_reserve(player)
             e.add_hosts(configuration.group.hosts)
 
     def _display_csv_header(self, games, mandatory_player_name):
-        print(";", end='')
+        print(";", end="")
         matches_per_game = Agenda.matches_per_game(
-            games, self.events, mandatory_player_name)
+            games, self.events, mandatory_player_name
+        )
         for g in games:
-            print("{} {} matches;".format(g.name.replace(
-                "_", " "), matches_per_game[g.name]), end='')
+            print(
+                "{} {} matches;".format(
+                    g.name.replace("_", " "), matches_per_game[g.name]
+                ),
+                end="",
+            )
         print("")
 
     def _display_blank_line(configuration):
         print(
-            ';'.join(['' for _ in range(len(configuration.collection.games) + 1)]))
+            ";".join(["" for _ in range(len(configuration.collection.games) + 1)]))
 
     def matches_per_game(games, events, mandatory_player_name):
         res = {}
         for event in events:
-            if mandatory_player_name is not None and \
-                    not event.has_player(mandatory_player_name):
+            if mandatory_player_name is not None and not event.has_player(
+                mandatory_player_name
+            ):
                 continue
             for g in event.full_games():
                 n = g[0].name
@@ -89,8 +102,9 @@ class Agenda:
     def sort_games(games, events, mandatory_player_name):
         total = []
         for event in events:
-            if mandatory_player_name is not None and \
-                    not event.has_player(mandatory_player_name):
+            if mandatory_player_name is not None and not event.has_player(
+                mandatory_player_name
+            ):
                 continue
             total += map(lambda g: g[0].name, event.full_games())
         res = sorted(games, key=lambda g: total.count(g.name))
@@ -100,9 +114,8 @@ class Agenda:
     def display_csv(self, configuration):
         mandatory_player_name = configuration.group.mandatory_player_name
         sorted_games = Agenda.sort_games(
-            configuration.collection.games,
-            self.events,
-            mandatory_player_name)
+            configuration.collection.games, self.events, mandatory_player_name
+        )
         self._display_csv_header(sorted_games, mandatory_player_name)
         for event in self.events:
             if datetime(
@@ -110,9 +123,10 @@ class Agenda:
                     event.month(),
                     event.day()).weekday() == 0:
                 print("")
-            print("{};".format(event.date), end='')
-            if mandatory_player_name is not None and \
-                    not event.has_player(mandatory_player_name):
+            print("{};".format(event.date), end="")
+            if mandatory_player_name is not None and not event.has_player(
+                mandatory_player_name
+            ):
                 Agenda._display_blank_line(configuration)
                 continue
             full_games = event.full_games()
@@ -124,9 +138,22 @@ class Agenda:
                         full_games))
                 if len(matching) == 1 and (
                         not mandatory_player_name or mandatory_player_name in matching[0][1]):
-                    nplayers = g.nplayer_str(len(matching[0][1]))
-                    players = ', '.join(matching[0][1])
-                    print("{}: {};".format(nplayers, players), end='')
+                    nplayers = len(
+                        matching[0][1]['default'] +
+                        matching[0][1]['under_reserve'])
+                    nplayers_str = g.nplayer_str(nplayers)
+                    players = ", ".join(matching[0][1]['default'])
+                    under_reserve_players = ", ".join(
+                        matching[0][1]['under_reserve'])
+                    res = "{}: ".format(nplayers_str)
+                    if len(players):
+                        res += "{}".format(players)
+                    if len(under_reserve_players):
+                        if len(players):
+                            res += ", "
+                        res += "({})".format(under_reserve_players)
+                    res += ";"
+                    print(res, end='')
                 else:
-                    print(";", end='')
+                    print(";", end="")
             print("")

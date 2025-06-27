@@ -52,7 +52,7 @@ class Game:
             raise Exception("Full game error")
 
     def __str__(self):
-        return "{}: ({}p)".format(self.name, "/".join(self.nplayers))
+        return "{}: ({}p)".format(self.name, "/".join(str(self.nplayers)))
 
     def __repr__(self):
         return "{}: ({}p)".format(self.name, "/".join(map(str, self.nplayers)))
