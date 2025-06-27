@@ -136,8 +136,10 @@ class Agenda:
                     filter(
                         lambda m: m[0].name.lower() == g.name.lower(),
                         full_games))
-                if len(matching) == 1 and (
-                        not mandatory_player_name or mandatory_player_name in matching[0][1]):
+                if len(matching) == 0 or (
+                        not mandatory_player_name and mandatory_player_name not in matching[0]['default'] and mandatory_player_name not in matching[0]['under_reserve']):
+                    print(";", end="")
+                else:
                     nplayers = len(
                         matching[0][1]['default'] +
                         matching[0][1]['under_reserve'])
@@ -154,6 +156,4 @@ class Agenda:
                         res += "({})".format(under_reserve_players)
                     res += ";"
                     print(res, end='')
-                else:
-                    print(";", end="")
             print("")
