@@ -8,9 +8,9 @@ from src.Group import Group
 
 class Configuration:
 
-    def __init__(self, config_fn):
+    def __init__(self, main_args):
         self.group = None
-        self._parse_config(config_fn)
+        self._parse_config(main_args.config, main_args.games_config)
 
     def _remove_impossible_games(self):
         m_player = self.group.mandatory_player()
@@ -22,16 +22,26 @@ class Configuration:
             if game not in mandatory_player_games:
                 self.collection.remove_game(game.name)
 
-    def _parse_config(self, filename):
+    def _parse_config(self, config_fn, games_config_fn):
         games = []
         players = []
 
         config = configparser.ConfigParser(delimiters='=')
         config.optionxform = str
-        config.read(filename)
+        config.read(config_fn)
 
-        for game_name in list(config['games'].keys()):
-            game_config = config['games'].get(game_name)
+
+        if games_config_fn is not None:
+            games_config = configparser.ConfigParser(delimiters='=')
+            games_config.optionxform = str
+            games_config.read(games_config_fn)
+            if 'games' in list(config.keys()):
+                print("Warning: Games and options from global configuration file will be ignored")
+        else:
+            games_config = config
+
+        for game_name in list(games_config['games'].keys()):
+            game_config = games_config['games'].get(game_name)
             s_config = list(
                 map(lambda s: s.strip(' '), game_config.split(';')))
             range_string = s_config[0]
@@ -48,19 +58,32 @@ class Configuration:
                                   config['players'].get(player_name).split(',')))
             pgames = list(map(lambda gn: self.collection.find(gn), game_names))
             #  under reserve games
-            ur_game_names = list(map(lambda s: s.strip(
-                ' '), config['players_under_reserve'].get(player_name).split(',')))
-            ur_pgames = list(
-                map(lambda gn: self.collection.find(gn), ur_game_names))
+            if 'players_under_reserve' in list(config.keys()):
+                ur_game_names = list(map(lambda s: s.strip(
+                    ' '), config['players_under_reserve'].get(player_name).split(',')))
+                ur_pgames = list(
+                    map(lambda gn: self.collection.find(gn), ur_game_names))
+            else :
+                ur_pgames = [] 
             players.append(Player(player_name, pgames, ur_pgames))
 
-        nhosts = int(config['options']['nhosts']
-                     ) if 'nhosts' in config['options'].keys() else 0
-        mandatory_name = config['options']['mandatory_player'] if 'mandatory_player' in config['options'].keys(
-        ) else None
-        hosts = []
-        for nhost in range(nhosts):
-            hosts.append(Player("host_{}".format(nhost + 1), games))
+        if 'options' not in list(games_config.keys()):
+            print("\n\n\n!!! Warning: no options provided !!!\n\n") 
+            if games_config_fn is not None and 'options' in list(config.keys()):
+                print("!!! Options provided in global configuration file are ignored if game configuration file is used !!!\n\n")
+            nbhosts = 0
+            mandatory_name = None
+            hosts = []
+        else:
+            options_config = games_config['options']
+
+            nhosts = int(options_config['nhosts']
+                         ) if 'nhosts' in options_config.keys() else 0
+            mandatory_name = options_config['mandatory_player'] if 'mandatory_player' in options_config.keys(
+            ) else None
+            hosts = []
+            for nhost in range(nhosts):
+                hosts.append(Player("host_{}".format(nhost + 1), games))
 
         self.group = Group(
             players,

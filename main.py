@@ -11,6 +11,7 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Find matching')
     parser.add_argument('-s', '--sheet')
     parser.add_argument('-c', '--config', default='config')
+    parser.add_argument('-g', '--games', default=None, dest='games_config')
     parser.add_argument('-o', '--output', default='ouput')
     parser.add_argument(
         '-i',
@@ -36,7 +37,7 @@ elif args.create_ics:
     calendar = GameCalendar(args.sheet, configuration)
     calendar.write_calendars(configuration)
 else:
-    configuration = Configuration(args.config)
+    configuration = Configuration(args)
     agenda = Agenda(args.sheet)
     agenda.find_matches(configuration)
     agenda.display_csv(configuration)

@@ -1,4 +1,5 @@
 import csv
+import sys
 from datetime import datetime
 from src.Event import Event
 import subprocess
@@ -17,8 +18,11 @@ class Agenda:
         return "\n".join(map(str, self.events))
 
     def _parse_sheet(self, filename):
+        if filename is None:
+            print("No sheet file name given. Abort.")
+            sys.exit()
         subprocess.call(["sed", "-i", "-e", 's/"//g', filename])
-        with open(filename, newline="") as csvfile:
+        with open(filename, newline="", mode='r') as csvfile:
             nb_yes = 0
             sh = list(csv.reader(csvfile, delimiter=",", quotechar='"'))
             n_row = len(list(sh))
@@ -136,8 +140,9 @@ class Agenda:
                     filter(
                         lambda m: m[0].name.lower() == g.name.lower(),
                         full_games))
+                # TODO Need to refactor this matching with a decent object: accessing [0][1] to get info is not OK 
                 if len(matching) == 0 or (
-                        not mandatory_player_name and mandatory_player_name not in matching[0]['default'] and mandatory_player_name not in matching[0]['under_reserve']):
+                        mandatory_player_name and mandatory_player_name not in matching[0][1]['default'] and mandatory_player_name not in matching[0][1]['under_reserve']):
                     print(";", end="")
                 else:
                     nplayers = len(
