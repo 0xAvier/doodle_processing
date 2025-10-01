@@ -140,9 +140,10 @@ class Agenda:
                     filter(
                         lambda m: m[0].name.lower() == g.name.lower(),
                         full_games))
-                # TODO Need to refactor this matching with a decent object: accessing [0][1] to get info is not OK 
-                if len(matching) == 0 or (
-                        mandatory_player_name and mandatory_player_name not in matching[0][1]['default'] and mandatory_player_name not in matching[0][1]['under_reserve']):
+                # TODO Need to refactor this matching with a decent object:
+                # accessing [0][1] to get info is not OK
+                if len(matching) == 0 or (mandatory_player_name and mandatory_player_name not in matching[
+                        0][1]['default'] and mandatory_player_name not in matching[0][1]['under_reserve']):
                     print(";", end="")
                 else:
                     nplayers = len(

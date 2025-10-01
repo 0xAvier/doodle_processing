@@ -30,13 +30,13 @@ class Configuration:
         config.optionxform = str
         config.read(config_fn)
 
-
         if games_config_fn is not None:
             games_config = configparser.ConfigParser(delimiters='=')
             games_config.optionxform = str
             games_config.read(games_config_fn)
             if 'games' in list(config.keys()):
-                print("Warning: Games and options from global configuration file will be ignored")
+                print(
+                    "Warning: Games and options from global configuration file will be ignored")
         else:
             games_config = config
 
@@ -63,14 +63,16 @@ class Configuration:
                     ' '), config['players_under_reserve'].get(player_name).split(',')))
                 ur_pgames = list(
                     map(lambda gn: self.collection.find(gn), ur_game_names))
-            else :
-                ur_pgames = [] 
+            else:
+                ur_pgames = []
             players.append(Player(player_name, pgames, ur_pgames))
 
         if 'options' not in list(games_config.keys()):
-            print("\n\n\n!!! Warning: no options provided !!!\n\n") 
-            if games_config_fn is not None and 'options' in list(config.keys()):
-                print("!!! Options provided in global configuration file are ignored if game configuration file is used !!!\n\n")
+            print("\n\n\n!!! Warning: no options provided !!!\n\n")
+            if games_config_fn is not None and 'options' in list(
+                    config.keys()):
+                print(
+                    "!!! Options provided in global configuration file are ignored if game configuration file is used !!!\n\n")
             nbhosts = 0
             mandatory_name = None
             hosts = []
