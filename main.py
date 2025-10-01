@@ -33,7 +33,7 @@ args = parse_args()
 if args.generate_config_from_poll:
     generateConfigFromPoll(args.generate_config_from_poll, args.output)
 elif args.create_ics:
-    configuration = Configuration(args.config)
+    configuration = Configuration(args)
     calendar = GameCalendar(args.sheet, configuration)
     calendar.write_calendars(configuration)
 else:
