@@ -10,6 +10,12 @@ L'argument -o est optionnel.
 Ensuite, 
 `./main.py -c output -s dates.csv > all.csv`
 
+Le fichier de configuration pris en compte par défaut est 'config' mais peut-être remplacé en l'indiquant avec l'option -c 
+Il peut contenir uniquement les joueurs & jeux seulement les joueurs. Dans ce cas, les informations concernant les jeux doivent être fournies dans le fichier de configuration de jeux via l'option -g.
+Dans ce cas, les [options] doivent s'y trouver. Se rapporter aux fichiers de tests pour des exemples.
+
+`./main.py -c output -s dates.csv -c config -g game_config > all.csv`
+
 
 ## Génération des ics & stats 
 ./main.py -c output -s selection.csv -i
