@@ -21,6 +21,7 @@ Dans ce cas, les [options] doivent s'y trouver. Se rapporter aux fichiers de tes
 ./main.py -c game_output -s selection.csv -i
 
 Ici, -g doit être passé également si il a été passé à l'étape précédente
+./main.py -c game_output -s selection.csv -i -g game_config 
 
 
 ## Options
