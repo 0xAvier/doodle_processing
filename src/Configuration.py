@@ -61,6 +61,7 @@ class Configuration:
             if 'players_under_reserve' in list(config.keys()):
                 ur_game_names = list(map(lambda s: s.strip(
                     ' '), config['players_under_reserve'].get(player_name).split(',')))
+                ur_game_names = filter(lambda s: len(s) > 0, ur_game_names)
                 ur_pgames = list(
                     map(lambda gn: self.collection.find(gn), ur_game_names))
             else:
