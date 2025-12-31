@@ -54,16 +54,21 @@ class Event:
     def year(self):
         if (len(self.date) < 8):
             return None
+        return int(self.date[0:4])
+        print(self.date)
+        # TODO find good format
         return int(self.date[6:10])
 
     def month(self):
         if (len(self.date) < 8):
             return None
+        return int(self.date[5:7])
         return int(self.date[3:5])
 
     def day(self):
         if (len(self.date) < 8):
             return None
+        return int(self.date[8:10])
         return int(self.date[0:2])
 
     def str_full_games(self):
