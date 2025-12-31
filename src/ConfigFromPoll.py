@@ -61,4 +61,4 @@ def generateConfigFromPoll(filename, o_file):
 
 
 def is_under_reserve(anwser):
-    return anwser == "Si nécessaire"
+    return anwser in ["Si nécessaire", "Si besoin"]
