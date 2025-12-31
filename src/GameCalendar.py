@@ -102,8 +102,8 @@ class GameCalendar:
             print(f"{g[0]} will be played {g[1]} times")
 
     def _format_date(self, date, time):
-        s_date = date.split("/")
-        res = f"{s_date[2]}-{s_date[1]}-{s_date[0]} {time}"
+        s_date = date.split("-")
+        res = f"{s_date[0]}-{s_date[1]}-{s_date[2]} {time}"
         tz = "Europe/Paris"
         return arrow.get(res, tzinfo=tz)
 
