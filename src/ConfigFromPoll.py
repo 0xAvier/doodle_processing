@@ -55,6 +55,10 @@ def generateConfigFromPoll(filename, o_file):
             for j in range(1, n_col):
                 if sh[i][j] == "Oui":
                     players[player_name].append(games[j - 1])
-                if sh[i][j] == "Si nécessaire":
+                if is_under_reserve(sh[i][j]):
                     players_under_reserve[player_name].append(games[j - 1])
         display_results(games, players, players_under_reserve, o_file)
+
+
+def is_under_reserve(anwser):
+    return anwser == "Si nécessaire"
