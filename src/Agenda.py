@@ -2,6 +2,7 @@ import csv
 import sys
 from datetime import datetime
 from src.Event import Event
+from src.ConfigFromPoll import is_under_reserve
 import subprocess
 
 
@@ -46,7 +47,7 @@ class Agenda:
                         nb_yes += 1
                         self.events[j -
                                     column_offset_events].add_player(player)
-                    if value == "Si nécessaire":
+                    if is_under_reserve(value):
                         nb_yes += 1
                         self.events[j -
                                     column_offset_events].add_player_under_reserve(player)
