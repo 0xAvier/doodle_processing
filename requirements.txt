@@ -1,0 +1,4 @@
+arrow==1.2.3
+ics==0.7.2
+# ics 0.7.2 passes buffer_class to tatsu which was removed in 5.12
+tatsu<5.12
