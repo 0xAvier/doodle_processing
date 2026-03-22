@@ -1,8 +1,12 @@
 import csv
 import re
+import warnings
 import arrow
 import ics
 from datetime import timedelta, timezone
+
+# Suppress FutureWarning from ics library's internal use of str(alarm)
+warnings.filterwarnings("ignore", category=FutureWarning, module="ics")
 
 
 class GameCalendar:
@@ -58,7 +62,7 @@ class GameCalendar:
                     players = value.split(",")
                     game = games[j - 1]
                     for p in players:
-                        p_key = p[1:]
+                        p_key = p.strip().strip("()")
                         if self.players[p_key] is None:
                             self.players[p_key] = []
                         self.players[p_key].append(
@@ -157,5 +161,5 @@ class GameCalendar:
                     self.dates_per_game[g_name] = set()
                 self.dates_per_game[g_name].add(start)
             with open(f"{p}.ics", "w") as my_file:
-                my_file.writelines(c)
+                my_file.write(c.serialize())
         self.display_stats(configuration)
