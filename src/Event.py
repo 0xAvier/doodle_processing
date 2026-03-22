@@ -20,15 +20,35 @@ class Event:
         def owner_there(g): return g.owner_name is None or self.has_player(
             g.owner_name)
 
-        def nb_player_for(g): return len(
-            self.games_dict[g]['default']) + len(self.games_dict[g]['under_reserve'])
-        def enough_player(g): return nb_player_for(
-            g) in g.nplayers or nb_player_for(g) > g.nplayer_min()
+        # Number of confirmed players for a game
+        def nb_default(g): return len(self.games_dict[g]['default'])
+        # Number of confirmed + under-reserve players for a game
+
+        def nb_total(g): return nb_default(g) + len(
+            self.games_dict[g]['under_reserve'])
+        # Whether confirmed players alone meet the game's player count
+
+        def enough_default(g): return nb_default(
+            g) in g.nplayers or nb_default(g) > g.nplayer_min()
+        # Whether confirmed + under-reserve players meet the game's player
+        # count
+        def enough_with_reserve(g): return nb_total(
+            g) in g.nplayers or nb_total(g) > g.nplayer_min()
+
+        result = []
         for g in self.games_dict.keys():
-            if g.name != 'Parks':
+            if not owner_there(g):
                 continue
-        return [[g, self.games_dict[g]]
-                for g in self.games_dict.keys() if enough_player(g) and owner_there(g)]
+            if not enough_with_reserve(g):
+                continue
+            # Include under-reserve players only if the game isn't
+            # already full with confirmed players alone
+            if nb_default(g) >= g.nplayer_max():
+                result.append([g, {'default': self.games_dict[g]['default'],
+                                   'under_reserve': []}])
+            else:
+                result.append([g, self.games_dict[g]])
+        return result
 
     def _format_full_game(full_game):
         g = full_game[0]
@@ -36,7 +56,7 @@ class Event:
         urplayers = full_game[1]['under_reserve']
         pnames = ', '.join(players)
         urpnames = ', '.join(urplayers)
-        nplayer = len(players)
+        nplayer = len(players) + len(urplayers)
         if nplayer in g.nplayers:
             nplayers = "{}p".format(nplayer)
         elif g.nplayer_max() < nplayer:
