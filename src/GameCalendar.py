@@ -58,7 +58,7 @@ class GameCalendar:
                     players = value.split(",")
                     game = games[j - 1]
                     for p in players:
-                        p_key = p[1:]
+                        p_key = p.strip().strip("()")
                         if self.players[p_key] is None:
                             self.players[p_key] = []
                         self.players[p_key].append(
